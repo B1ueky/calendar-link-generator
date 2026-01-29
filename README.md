@@ -4,7 +4,7 @@ A free, open-source alternative to AddEvent for generating calendar invitation l
 
 ## Problem Solved
 
-Many businesses use services like [AddEvent](https://www.addevent.com/) to add "Add to Calendar" buttons in their marketing emails. These services charge monthly fees for a relatively simple feature.
+Many businesses use services [AddEvent](https://www.addevent.com/) in mailchimp to add "Add to Calendar" buttons in their marketing emails. These services charge monthly fees for a relatively simple feature.
 
 **This tool solves that problem by:**
 - Generating calendar links for Google Calendar, Office 365, and Outlook.com
