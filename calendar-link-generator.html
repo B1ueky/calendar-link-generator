@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar Link Generator - Hai Money</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    body {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      color: #1a3a3a;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #333;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #1a3a3a;
+    }
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    .row {
+      display: flex;
+      gap: 20px;
+    }
+    .row .form-group {
+      flex: 1;
+    }
+    button {
+      background: #1a3a3a;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+    button:hover {
+      background: #2a5a5a;
+    }
+    button.secondary {
+      background: #666;
+    }
+    button.secondary:hover {
+      background: #888;
+    }
+    .output-section {
+      margin-top: 40px;
+      display: none;
+    }
+    .output-section.show {
+      display: block;
+    }
+    .output-box {
+      background: #1a1a1a;
+      color: #0f0;
+      padding: 20px;
+      border-radius: 6px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 12px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .preview-section {
+      margin-top: 30px;
+      padding: 30px;
+      background: white;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+    }
+    .preview-section h3 {
+      margin-top: 0;
+      color: #666;
+    }
+    .copy-btn {
+      margin-top: 15px;
+    }
+    .success-msg {
+      color: #0a0;
+      margin-left: 10px;
+      display: none;
+    }
+    .success-msg.show {
+      display: inline;
+    }
+    .instructions {
+      background: #e8f4f4;
+      padding: 20px;
+      border-radius: 6px;
+      margin-bottom: 30px;
+    }
+    .instructions h3 {
+      margin-top: 0;
+      color: #1a3a3a;
+    }
+    .instructions ol {
+      margin-bottom: 0;
+      padding-left: 20px;
+    }
+    .instructions li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Calendar Link Generator</h1>
+  <p class="subtitle">Generate calendar links for Mailchimp emails - No AddEvent needed</p>
+
+  <div class="instructions">
+    <h3>How to use:</h3>
+    <ol>
+      <li>Fill in the event details below</li>
+      <li>Click "Generate HTML Code"</li>
+      <li>Copy the generated code</li>
+      <li>In Mailchimp, add a "Code" block and paste the HTML</li>
+    </ol>
+  </div>
+
+  <form id="eventForm">
+    <div class="form-group">
+      <label for="title">Event Title *</label>
+      <input type="text" id="title" required placeholder="e.g. RedZed Commercial Workshop: Filling the Gaps in Mainstream Lending">
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label for="date">Date *</label>
+        <input type="date" id="date" required>
+      </div>
+      <div class="form-group">
+        <label for="startTime">Start Time *</label>
+        <input type="time" id="startTime" required value="10:30">
+      </div>
+      <div class="form-group">
+        <label for="endTime">End Time *</label>
+        <input type="time" id="endTime" required value="11:30">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label for="timezone">Timezone</label>
+        <select id="timezone">
+          <option value="Australia/Sydney" selected>Australia/Sydney (AEST/AEDT)</option>
+          <option value="Australia/Melbourne">Australia/Melbourne</option>
+          <option value="Australia/Brisbane">Australia/Brisbane</option>
+          <option value="Australia/Perth">Australia/Perth</option>
+          <option value="Asia/Shanghai">China (CST)</option>
+          <option value="Asia/Hong_Kong">Hong Kong</option>
+          <option value="Asia/Singapore">Singapore</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="location">Location (optional)</label>
+        <input type="text" id="location" placeholder="e.g. Online or Suite 6.04, Tower 1, 495 Victoria Ave">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Event Description</label>
+      <textarea id="description" placeholder="e.g. CPD: 1 point&#10;&#10;- Gaps in mainstream commercial lending&#10;- Deep dive into non-bank residential, commercial, and private lending&#10;- SMSF lending"></textarea>
+    </div>
+
+    <button type="submit">Generate HTML Code</button>
+    <button type="button" class="secondary" onclick="clearForm()">Clear</button>
+  </form>
+
+  <div class="output-section" id="outputSection">
+    <h2>Generated HTML Code</h2>
+    <p>Copy this code and paste it into a Mailchimp "Code" block:</p>
+    <div class="output-box" id="outputCode"></div>
+    <button class="copy-btn" onclick="copyCode()">Copy to Clipboard</button>
+    <span class="success-msg" id="successMsg">Copied!</span>
+
+    <div class="preview-section">
+      <h3>Preview:</h3>
+      <div id="preview"></div>
+    </div>
+  </div>
+
+  <script>
+    // Timezone offset mapping (for Sydney, considering daylight saving)
+    const timezoneOffsets = {
+      'Australia/Sydney': '+11:00',  // AEDT (Oct-Apr)
+      'Australia/Melbourne': '+11:00',
+      'Australia/Brisbane': '+10:00', // No DST
+      'Australia/Perth': '+08:00',
+      'Asia/Shanghai': '+08:00',
+      'Asia/Hong_Kong': '+08:00',
+      'Asia/Singapore': '+08:00'
+    };
+
+    document.getElementById('eventForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      generateCode();
+    });
+
+    function generateCode() {
+      const title = document.getElementById('title').value;
+      const date = document.getElementById('date').value;
+      const startTime = document.getElementById('startTime').value;
+      const endTime = document.getElementById('endTime').value;
+      const timezone = document.getElementById('timezone').value;
+      const location = document.getElementById('location').value;
+      const description = document.getElementById('description').value;
+
+      // Format for Google Calendar (YYYYMMDDTHHmmss)
+      const googleStart = date.replace(/-/g, '') + 'T' + startTime.replace(':', '') + '00';
+      const googleEnd = date.replace(/-/g, '') + 'T' + endTime.replace(':', '') + '00';
+
+      // Format for Outlook (ISO format with timezone)
+      const tzOffset = timezoneOffsets[timezone] || '+11:00';
+      const outlookStart = `${date}T${startTime}:00${tzOffset}`;
+      const outlookEnd = `${date}T${endTime}:00${tzOffset}`;
+
+      // URL encode values
+      const encTitle = encodeURIComponent(title);
+      const encDesc = encodeURIComponent(description);
+      const encLocation = encodeURIComponent(location);
+
+      // Generate links
+      const googleLink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encTitle}&dates=${googleStart}/${googleEnd}&details=${encDesc}&location=${encLocation}&ctz=${timezone}`;
+
+      const office365Link = `https://outlook.office.com/calendar/action/compose?rru=addevent&subject=${encTitle}&startdt=${encodeURIComponent(outlookStart)}&enddt=${encodeURIComponent(outlookEnd)}&body=${encDesc}&location=${encLocation}`;
+
+      const outlookLink = `https://outlook.live.com/calendar/action/compose?rru=addevent&subject=${encTitle}&startdt=${encodeURIComponent(outlookStart)}&enddt=${encodeURIComponent(outlookEnd)}&body=${encDesc}&location=${encLocation}`;
+
+      // Generate HTML
+      const html = `<table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <td align="center" style="padding: 30px 20px;">
+      <p style="font-family: Arial, Helvetica, sans-serif; font-size: 15px; font-weight: bold; color: #333333; margin: 0 0 18px 0; text-align: center;">
+        Add event to calendar
+      </p>
+      <table cellpadding="0" cellspacing="0" border="0" align="center" style="margin: 0 auto;"><tr>
+          <td style="padding: 0 10px;"><a href="${googleLink}" target="_blank"><img src="https://cdn.addevent.com/libs/imgs/icon-emd-share-google-t1.png" width="36" height="36" style="border:0;display:block;text-decoration:none;" /></a></td>
+          <td style="padding: 0 10px;"><a href="${office365Link}" target="_blank"><img src="https://cdn.addevent.com/libs/imgs/icon-emd-share-office365-t1.png" width="36" height="36" style="border:0;display:block;text-decoration:none;" /></a></td>
+          <td style="padding: 0 10px;"><a href="${outlookLink}" target="_blank"><img src="https://cdn.addevent.com/libs/imgs/icon-emd-share-outlook-t1.png" width="36" height="36" style="border:0;display:block;text-decoration:none;" /></a></td>
+        </tr></table>
+    </td>
+  </tr>
+</table>`;
+
+      // Display output
+      document.getElementById('outputCode').textContent = html;
+      document.getElementById('outputSection').classList.add('show');
+
+      // Generate preview
+      document.getElementById('preview').innerHTML = html;
+
+      // Scroll to output
+      document.getElementById('outputSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function copyCode() {
+      const code = document.getElementById('outputCode').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const msg = document.getElementById('successMsg');
+        msg.classList.add('show');
+        setTimeout(() => msg.classList.remove('show'), 2000);
+      });
+    }
+
+    function clearForm() {
+      document.getElementById('eventForm').reset();
+      document.getElementById('outputSection').classList.remove('show');
+    }
+  </script>
+</body>
+</html>
